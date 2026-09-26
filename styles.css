@@ -43,10 +43,12 @@ a { color: var(--signal); }
 header.site-header {
   position: sticky;
   top: 0;
+  z-index: 30;
   background: var(--paper);
   border-bottom: 1px solid var(--border);
 }
 .nav-row {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,6 +61,37 @@ header.site-header {
 nav.links { display: flex; gap: 1.3rem; font-size: 0.92rem; }
 nav.links a { text-decoration: none; color: var(--ink); }
 nav.links a:hover { color: var(--signal); }
+
+.nav-toggle-checkbox { display: none; }
+.nav-toggle-btn {
+  display: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink);
+  user-select: none;
+}
+
+@media (max-width: 640px) {
+  .nav-toggle-btn { display: block; }
+  nav.links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+  nav.links a {
+    padding: 0.85rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .nav-toggle-checkbox:checked ~ nav.links { display: flex; }
+}
 
 /* Dark mode toggle — liquid switch (Uiverse.io by Bodyhc) */
 .liquid-3 {
