@@ -48,7 +48,6 @@ header.site-header {
   border-bottom: 1px solid var(--border);
 }
 .nav-row {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -61,37 +60,6 @@ header.site-header {
 nav.links { display: flex; gap: 1.3rem; font-size: 0.92rem; }
 nav.links a { text-decoration: none; color: var(--ink); }
 nav.links a:hover { color: var(--signal); }
-
-.nav-toggle-checkbox { display: none; }
-.nav-toggle-btn {
-  display: none;
-  font-size: 1.4rem;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--ink);
-  user-select: none;
-}
-
-@media (max-width: 640px) {
-  .nav-toggle-btn { display: block; }
-  nav.links {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    gap: 0;
-    background: var(--paper);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-  }
-  nav.links a {
-    padding: 0.85rem 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .nav-toggle-checkbox:checked ~ nav.links { display: flex; }
-}
 
 /* Dark mode toggle — liquid switch (Uiverse.io by Bodyhc) */
 .liquid-3 {
@@ -139,7 +107,7 @@ nav.links a:hover { color: var(--signal); }
 section { padding: 3.4rem 0; }
 section + section { border-top: 1px solid var(--border); }
 h1, h2, h3, h4 { font-weight: 600; line-height: 1.25; margin: 0 0 0.7rem; }
-h1 { font-size: 2.2rem; font-weight: 700; }
+h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); font-weight: 700; }
 h2 { font-size: 1.5rem; }
 h3 { font-size: 1.15rem; }
 h4 { font-size: 1rem; color: var(--signal); margin-top: 1.4rem; }
@@ -259,7 +227,26 @@ footer { padding: 2.6rem 0; border-top: 1px solid var(--border); }
 .contact-grid { display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; font-size: 0.92rem; }
 .contact-grid span.label { display: block; color: var(--muted); font-size: 0.78rem; margin-bottom: 0.15rem; }
 
-/* Small screens */
-@media (max-width: 560px) {
-  .cols { grid-template-columns: 1fr; }
+/* Phones */
+@media (max-width: 640px) {
+  .wrap { padding: 0 1.1rem; }
+  .nav-row { padding: 0.8rem 1.1rem; flex-wrap: wrap; row-gap: 0.6rem; justify-content: center; }
+  .brand { flex-basis: 100%; text-align: center; }
+  .nav-right { flex-wrap: wrap; justify-content: center; gap: 0.7rem 1rem; }
+  nav.links { flex-wrap: wrap; justify-content: center; gap: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .liquid-3 { font-size: 7px; }
+
+  section { padding: 2.2rem 0; }
+  .lead { font-size: 1.05rem; }
+
+  .diagram-box { padding: 1rem 0.8rem 0.8rem; }
+  .diagram-caption { flex-direction: column; gap: 0.2rem; }
+  .diagram-controls { justify-content: center; }
+  .diagram-status { margin-left: 0; width: 100%; text-align: center; }
+
+  table.transition { display: block; overflow-x: auto; white-space: nowrap; }
+
+  .cols { grid-template-columns: 1fr; gap: 1.5rem; }
+
+  .contact-grid { gap: 0.9rem 1.5rem; }
 }
