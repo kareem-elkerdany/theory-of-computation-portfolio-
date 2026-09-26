@@ -1,16 +1,4 @@
 (function () {
-  var navToggle = document.getElementById('nav-toggle');
-  var navLinks = document.querySelectorAll('.links a');
-  if (navToggle) {
-    navLinks.forEach(function (link) {
-      link.addEventListener('click', function () {
-        navToggle.checked = false;
-      });
-    });
-  }
-})();
-
-(function () {
   var toggle = document.getElementById('theme-toggle');
   if (toggle) {
     var stored = null;
