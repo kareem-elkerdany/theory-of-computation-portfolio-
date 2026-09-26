@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kareem Ahmed — Theory of Computation Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-row">
+    <div class="brand mono"><strong>Kareem Ahmed</strong></div>
+    <div class="nav-right">
+      <nav class="links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <input type="checkbox" id="theme-toggle" class="liquid-3" aria-label="Toggle dark mode" />
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="hero">
+    <div class="wrap">
+      <h1>A student's notebook on machines that decide</h1>
+      <p class="lead">I'm Kareem Ahmed, a Computer Science student who builds web applications and is now learning to think in states, transitions, and formal languages.</p>
+      <p class="course-line">Prepared for <span class="mono">Theory of Computation</span> — Prof. Nahla Ahmed Abd El-Rafie Bilal</p>
+
+      <div class="diagram-box">
+        <svg id="automaton" viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--border)"></path>
+            </marker>
+          </defs>
+          <path class="start-arrow" d="M 30,100 L 96,100" marker-end="url(#arrow)" />
+          <path class="edge-path" data-edge="0-1" d="M 172,84 C 210,54 250,54 288,84" marker-end="url(#arrow)" />
+          <text class="edge-label" x="230" y="46">Coin</text>
+          <path class="edge-path" data-edge="1-0" d="M 288,116 C 250,146 210,146 172,116" marker-end="url(#arrow)" />
+          <text class="edge-label" x="230" y="164">Push</text>
+          <path class="edge-path" data-edge="0-0" d="M 116,72 C 100,30 168,30 164,70" marker-end="url(#arrow)" />
+          <text class="edge-label" x="140" y="24">Push</text>
+          <path class="edge-path" data-edge="1-1" d="M 296,70 C 292,30 360,30 344,72" marker-end="url(#arrow)" />
+          <text class="edge-label" x="322" y="24">Coin</text>
+          <g>
+            <circle class="state-circle" data-state="0" cx="140" cy="100" r="34"></circle>
+            <text class="state-label" data-label="0" x="140" y="96">q0</text>
+            <text class="state-label" data-label="0" x="140" y="111" font-size="9">Locked</text>
+          </g>
+          <g>
+            <circle class="state-circle accept-ring" cx="320" cy="100" r="40"></circle>
+            <circle class="state-circle" data-state="1" cx="320" cy="100" r="34"></circle>
+            <text class="state-label" data-label="1" x="320" y="96">q1</text>
+            <text class="state-label" data-label="1" x="320" y="111" font-size="9">Unlocked</text>
+          </g>
+        </svg>
+        <div class="diagram-caption">
+          <span>M = (Q, Σ, δ, q0, F) — turnstile DFA</span>
+          <span>Σ = {Coin, Push}</span>
+        </div>
+        <div class="diagram-controls">
+          <button type="button" class="dfa-btn" data-symbol="coin">Insert coin</button>
+          <button type="button" class="dfa-btn" data-symbol="push">Push barrier</button>
+          <span class="diagram-status">Current state: <strong id="state-readout">Locked</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>About me</h2>
+      <p>I'm a second-year Computer Science student at the Arab Academy for Science, Technology and Maritime Transport (AASTMT), where I split my time between coursework and building things in C, C++, Java, Python, PHP, and SQL — usually full-stack web apps or small games with MySQL behind them. Theory of Computation is where the systems I build every day get their vocabulary: states, alphabets, and transition functions turn out to be quiet descriptions of things I've already coded without naming them.</p>
+      <p>This portfolio collects what I'm learning in the course, alongside a couple of worked examples that connect the theory to code.</p>
+      <h3>Interests</h3>
+      <ul class="badges">
+        <li>Automata theory</li>
+        <li>Formal languages</li>
+        <li>Algorithms</li>
+        <li>Artificial intelligence</li>
+        <li>Web development</li>
+        <li>Databases</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <h2>Projects</h2>
+
+      <div class="project">
+        <div class="project-kicker">case study · deterministic finite automata</div>
+        <h3>A real-life DFA: the automated turnstile gate</h3>
+        <p>Picture the electronic control behind a turnstile at a metro station or amusement park: it starts <strong>Locked</strong>, and every passenger action moves it to exactly one next state — never two, never none.</p>
+        <ul>
+          <li>Pushing the barrier while locked keeps it <strong>Locked</strong> (rejected, alarm sounds).</li>
+          <li>Tapping a valid coin or ticket switches it to <strong>Unlocked</strong>.</li>
+          <li>Tapping another coin while already unlocked keeps it <strong>Unlocked</strong> (the extra fare is absorbed).</li>
+          <li>Pushing through the unlocked barrier rotates it and snaps straight back to <strong>Locked</strong>.</li>
+        </ul>
+        <table class="transition">
+          <tr><th>Current state</th><th>Coin</th><th>Push</th></tr>
+          <tr><td>Locked (q0)</td><td>Unlocked</td><td>Locked</td></tr>
+          <tr><td>Unlocked</td><td>Unlocked</td><td>Locked</td></tr>
+        </table>
+        <div class="formal">
+          M = (Q, Σ, δ, q0, F)<br>
+          Q = {Locked, Unlocked} &nbsp; Σ = {Coin, Push} &nbsp; F = {Unlocked}<br>
+          δ(Locked, Coin) = Unlocked &nbsp; δ(Locked, Push) = Locked<br>
+          δ(Unlocked, Coin) = Unlocked &nbsp; δ(Unlocked, Push) = Locked
+        </div>
+        <p>The gate never has to remember how many coins came in or how many people already passed — only its current state and the next symbol. That's what makes it a clean DFA rather than something needing memory: finite states, one deterministic move per input, done.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-kicker">case study · cryptanalysis &amp; computing history</div>
+        <h3>The Bombe (1939): automating cryptanalysis in World War II</h3>
+        <p>The Bombe was an electromechanical decryption device designed by Alan Turing in 1939 at Bletchley Park in the United Kingdom. Developed during World War II, the machine was built specifically to break the daily encryption keys used by the German Enigma cipher machine and allow Allied intelligence to decipher secret enemy communications at scale.</p>
+
+        <h4>The Bombe design</h4>
+        <p>The Bombe was designed as an automated search tool rather than a standard calculator. It recreated the internal circuitry of multiple Enigma machines working simultaneously. Important features of the design included:</p>
+        <ul>
+          <li><strong>Electromechanical drums</strong> — rotating metal drums that simulated the stepping rotors of several Enigma machines connected together.</li>
+          <li><strong>Crib-based processing</strong> — designed to test logical chains based on a "crib," a short piece of guessed plain text (such as routine weather terms).</li>
+          <li><strong>Automated logical contradiction elimination</strong> — current passed through internal circuits to rule out impossible key combinations instantly.</li>
+          <li><strong>The Diagonal Board</strong> — an enhancement added by mathematician Gordon Welchman that drastically expanded the machine's ability to eliminate invalid settings.</li>
+          <li><strong>Automatic stop mechanism</strong> — the machine automatically stopped spinning whenever it found a settings combination that contained no logical contradictions.</li>
+        </ul>
+
+        <h4>Operation and scale</h4>
+        <p>The first prototype machine, named Victory, began operating in March 1940. Over the course of the war, Bletchley Park and secondary sites built and operated over 200 Bombes. The machines were primarily maintained and run by members of the Women's Royal Naval Service (Wrens).</p>
+
+        <h4>Why the Bombe matters</h4>
+        <p>The Bombe project is significant in history because it turned complex, time-consuming cryptanalysis into an automated industrial process. By testing thousands of daily rotor settings in hours rather than weeks, it provided vital military intelligence (code-named Ultra) that helped protect Allied naval convoys and shortened World War II by years.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <h2>Skills</h2>
+      <div class="cols">
+        <div>
+          <h3>Theory</h3>
+          <ul>
+            <li>Designing DFAs and NFAs</li>
+            <li>Regular expressions &amp; formal languages</li>
+            <li>Context-free grammars &amp; pushdown automata (intro)</li>
+            <li>Proof by induction, pumping lemma basics</li>
+            <li>Turing machines &amp; decidability basics</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Practice</h3>
+          <ul>
+            <li>C, C++, Java, Python, PHP, JavaScript</li>
+            <li>SQL, MySQL &amp; database design</li>
+            <li>Front-end &amp; full-stack web development</li>
+            <li>Git/GitHub, blockchain fundamentals</li>
+            <li>Competitive programming (ECPC participant)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="learned">
+    <div class="wrap">
+      <h2>What I learned</h2>
+      <p>The biggest shift so far is seeing how much history and abstract math from this course maps onto engineering trade-offs I already care about. The Bombe turned a slow, manual process into an automated one by encoding the problem directly into hardware — not so different from deciding how to encode logic into a database schema or an API. Theory of Computation is giving me a formal way to reason about a problem before I start writing a solution to it.</p>
+    </div>
+  </section>
+
+  <section id="goals">
+    <div class="wrap">
+      <h2>Future goals</h2>
+      <ul class="goals">
+        <li>Use automata and formal grammars to understand how parsers and compilers work</li>
+        <li>Apply formal methods to make my own web applications more provably correct</li>
+        <li>Go deeper into algorithms and the theoretical foundations of AI</li>
+        <li>Keep building full-stack projects while grounding them in stronger CS fundamentals</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="wrap">
+      <h2>Contact</h2>
+      <div class="contact-grid">
+        <div><span class="label">Name</span>Kareem Ahmed</div>
+        <div><span class="label">Course</span>Theory of Computation</div>
+        <div><span class="label">Email</span>kareemelkerdany6@gmail.com</div>
+        <div><span class="label">Phone</span>01033997952</div>
+        <div><span class="label">GitHub</span>____________________</div>
+        <div><span class="label">LinkedIn</span>____________________</div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
