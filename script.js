@@ -9,11 +9,14 @@
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     toggle.checked = dark;
 
-    toggle.addEventListener('change', function () {
+    function applyTheme() {
       var theme = toggle.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', theme);
       try { localStorage.setItem('theme', theme); } catch (e) {}
-    });
+    }
+
+    toggle.addEventListener('change', applyTheme);
+    toggle.addEventListener('click', applyTheme);
   }
 })();
 
