@@ -301,3 +301,12 @@ footer { padding: 2.6rem 0; border-top: 1px solid var(--border); }
 
   .contact-grid { gap: 0.9rem 1.5rem; }
 }
+
+/* Week 2 — NFA */
+svg#nfa { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
+.nfa-edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+table.trace td:first-child { color: var(--muted); }
+.trace-result { padding-left: 0.8rem; border-left: 3px solid var(--border); }
+.trace-result.accept { border-left-color: var(--signal); }
+.trace-result.reject { border-left-color: var(--accept); }
+sup { font-size: 0.7em; }
