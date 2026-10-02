@@ -145,6 +145,103 @@
         <h4>Why the Bombe matters</h4>
         <p>The Bombe project is significant in history because it turned complex, time-consuming cryptanalysis into an automated industrial process. By testing thousands of daily rotor settings in hours rather than weeks, it provided vital military intelligence (code-named Ultra) that helped protect Allied naval convoys and shortened World War II by years.</p>
       </div>
+
+      <div class="project">
+        <div class="project-kicker">week 2 · nondeterministic finite automata</div>
+        <h3>An NFA over the single symbol {0}: lengths 0<sup>k</sup> with k a multiple of 2 or 3</h3>
+        <p>The task: design an NFA whose alphabet contains only <span class="mono">0</span>, and which accepts strings of the form 0<sup>k</sup>. The idea is to let the machine <em>guess</em> which cycle to follow. From the start state, two ε-moves launch two independent branches: one counts 0s modulo 2, the other counts them modulo 3. A string is accepted if either branch is back on its accepting state when the input ends.</p>
+
+        <div class="diagram-box nfa-box">
+          <svg id="nfa" viewBox="0 0 460 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NFA with an epsilon split into a 2-cycle and a 3-cycle">
+            <defs>
+              <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"></path>
+              </marker>
+            </defs>
+            <path class="nfa-edge" d="M 10,135 L 26,135" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 69.7,121.3 L 160.2,58.7" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 72.1,144.4 L 157.9,180.6" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 203,36 C 250,14 300,14 347,36" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 347,56 C 300,78 250,78 203,56" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 203.9,187.5 L 346.1,172.5" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 351.6,185.4 L 298.4,229.6" marker-end="url(#arrow2)" />
+            <path class="nfa-edge" d="M 259,233.4 L 201,201.6" marker-end="url(#arrow2)" />
+
+            <text class="edge-label" x="96" y="84">ε</text>
+            <text class="edge-label" x="96" y="178">ε</text>
+            <text class="edge-label" x="275" y="12">0</text>
+            <text class="edge-label" x="275" y="92">0</text>
+            <text class="edge-label" x="275" y="164">0</text>
+            <text class="edge-label" x="345" y="228">0</text>
+            <text class="edge-label" x="222" y="238">0</text>
+
+            <circle class="state-circle" cx="50" cy="135" r="24"></circle>
+            <text class="state-label" x="50" y="139">q0</text>
+
+            <circle class="state-circle accept-ring" cx="180" cy="45" r="29"></circle>
+            <circle class="state-circle" cx="180" cy="45" r="24"></circle>
+            <text class="state-label" x="180" y="49">q1</text>
+            <circle class="state-circle" cx="370" cy="45" r="24"></circle>
+            <text class="state-label" x="370" y="49">q2</text>
+
+            <circle class="state-circle accept-ring" cx="180" cy="190" r="29"></circle>
+            <circle class="state-circle" cx="180" cy="190" r="24"></circle>
+            <text class="state-label" x="180" y="194">q3</text>
+            <circle class="state-circle" cx="370" cy="170" r="24"></circle>
+            <text class="state-label" x="370" y="174">q4</text>
+            <circle class="state-circle" cx="280" cy="245" r="24"></circle>
+            <text class="state-label" x="280" y="249">q5</text>
+          </svg>
+          <div class="diagram-caption">
+            <span>N = (Q, Σ, δ, q0, F) — two ε-branches</span>
+            <span>Σ = {0}</span>
+          </div>
+        </div>
+
+        <h4>Formal definition</h4>
+        <div class="formal">
+          N = (Q, Σ, δ, q0, F)<br>
+          Q = {q0, q1, q2, q3, q4, q5} &nbsp; Σ = {0} &nbsp; F = {q1, q3}<br>
+          L(N) = { 0<sup>k</sup> | k is divisible by 2 or by 3 }
+        </div>
+        <table class="transition">
+          <tr><th>State</th><th>0</th><th>ε</th></tr>
+          <tr><td>→ q0</td><td>∅</td><td>{q1, q3}</td></tr>
+          <tr><td>* q1</td><td>{q2}</td><td>∅</td></tr>
+          <tr><td>q2</td><td>{q1}</td><td>∅</td></tr>
+          <tr><td>* q3</td><td>{q4}</td><td>∅</td></tr>
+          <tr><td>q4</td><td>{q5}</td><td>∅</td></tr>
+          <tr><td>q5</td><td>{q3}</td><td>∅</td></tr>
+        </table>
+        <p>The top loop (q1 ↔ q2) returns to q1 after every even number of 0s; the bottom loop (q3 → q4 → q5 → q3) returns to q3 after every multiple of three. Since the machine accepts when <em>any</em> branch ends in an accepting state, 0<sup>k</sup> is accepted exactly when k is a multiple of 2 or 3 (including the empty string, k = 0).</p>
+
+        <h4>Trace of 0<sup>5</sup> — rejected</h4>
+        <p>Before reading anything, the ε-closure of q0 is {q0, q1, q3}. After the first 0, q0 has no 0-move, so it drops out and only the two cycle branches remain.</p>
+        <table class="transition trace">
+          <tr><th>Step</th><th>Read</th><th>Active states</th></tr>
+          <tr><td>0</td><td>ε-closure</td><td>{q0, q1, q3}</td></tr>
+          <tr><td>1</td><td>0</td><td>{q2, q4}</td></tr>
+          <tr><td>2</td><td>0</td><td>{q1, q5}</td></tr>
+          <tr><td>3</td><td>0</td><td>{q2, q3}</td></tr>
+          <tr><td>4</td><td>0</td><td>{q1, q4}</td></tr>
+          <tr><td>5</td><td>0</td><td>{q2, q5}</td></tr>
+        </table>
+        <p class="trace-result reject">Final set {q2, q5} contains no state from F, so 0<sup>5</sup> is <strong>rejected</strong>. The top branch sits on q2 because 5 is odd, and the bottom branch sits on q5 because 5 mod 3 = 2.</p>
+
+        <h4>Trace of 0<sup>6</sup> — accepted</h4>
+        <table class="transition trace">
+          <tr><th>Step</th><th>Read</th><th>Active states</th></tr>
+          <tr><td>0</td><td>ε-closure</td><td>{q0, q1, q3}</td></tr>
+          <tr><td>1</td><td>0</td><td>{q2, q4}</td></tr>
+          <tr><td>2</td><td>0</td><td>{q1, q5}</td></tr>
+          <tr><td>3</td><td>0</td><td>{q2, q3}</td></tr>
+          <tr><td>4</td><td>0</td><td>{q1, q4}</td></tr>
+          <tr><td>5</td><td>0</td><td>{q2, q5}</td></tr>
+          <tr><td>6</td><td>0</td><td>{q1, q3}</td></tr>
+        </table>
+        <p class="trace-result accept">Final set {q1, q3} contains accepting states, so 0<sup>6</sup> is <strong>accepted</strong>. Both branches accept here, because 6 is divisible by 2 and by 3.</p>
+        <p>Compared with the turnstile DFA, the nondeterminism buys a much simpler design: instead of building one machine that tracks the length modulo 6 and decides, the NFA runs the two small counters in parallel and lets either one say yes.</p>
+      </div>
     </div>
   </section>
 
