@@ -93,3 +93,92 @@
     });
   });
 })();
+
+// Two-button lock activity: the same input read by an NFA and a DFA (Σ = {A, B}).
+(function () {
+  var keys = Array.prototype.slice.call(document.querySelectorAll('.lock-btn[data-key]'));
+  if (!keys.length) return;
+  var resetBtn = document.getElementById('lock-reset');
+  var inputEl = document.getElementById('lock-input');
+  var nfaEl = document.getElementById('lock-nfa-set');
+  var dfaEl = document.getElementById('lock-dfa-state');
+  var verdictEl = document.getElementById('lock-verdict');
+  var traceEl = document.getElementById('lock-trace');
+
+  var dfaTable = {
+    0: { A: 1, B: 0 },
+    1: { A: 1, B: 2 },
+    2: { A: 2, B: 2 }
+  };
+
+  var typed, nfa, dfa;
+
+  function nfaStep(set, k) {
+    var next = {};
+    if (set[0]) { next[0] = true; if (k === 'A') next[1] = true; }
+    if (set[1] && k === 'B') next[2] = true;
+    if (set[2]) next[2] = true;
+    return next;
+  }
+
+  function fmt(set) {
+    var names = [];
+    for (var i = 0; i < 3; i++) if (set[i]) names.push('n' + i);
+    return '{' + names.join(', ') + '}';
+  }
+
+  function paint() {
+    Array.prototype.forEach.call(document.querySelectorAll('#lock-nfa .lock-circle[data-n]'), function (c) {
+      c.classList.toggle('active', !!nfa[c.dataset.n]);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#lock-nfa .lock-label'), function (l) {
+      l.classList.toggle('on', !!nfa[l.dataset.nl]);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#lock-dfa .lock-circle[data-d]'), function (c) {
+      c.classList.toggle('active', Number(c.dataset.d) === dfa);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#lock-dfa .lock-label'), function (l) {
+      l.classList.toggle('on', Number(l.dataset.dl) === dfa);
+    });
+    inputEl.textContent = typed.length ? typed.join(' ') : '\u03b5 (empty)';
+    nfaEl.textContent = fmt(nfa);
+    dfaEl.textContent = 'S' + dfa;
+    var open = dfa === 2;
+    verdictEl.textContent = open ? 'Unlocked (accepted)' : 'Locked';
+    verdictEl.classList.toggle('open', open);
+  }
+
+  function addRow(step, key) {
+    var tr = document.createElement('tr');
+    [String(step), key, fmt(nfa), 'S' + dfa].forEach(function (t) {
+      var td = document.createElement('td');
+      td.textContent = t;
+      tr.appendChild(td);
+    });
+    traceEl.appendChild(tr);
+    var box = traceEl.parentNode.parentNode;
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function reset() {
+    typed = [];
+    nfa = { 0: true };
+    dfa = 0;
+    traceEl.innerHTML = '';
+    addRow(0, 'start');
+    paint();
+  }
+
+  keys.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var k = b.dataset.key;
+      typed.push(k);
+      nfa = nfaStep(nfa, k);
+      dfa = dfaTable[dfa][k];
+      addRow(typed.length, k);
+      paint();
+    });
+  });
+  resetBtn.addEventListener('click', reset);
+  reset();
+})();
