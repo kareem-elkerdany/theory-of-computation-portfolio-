@@ -242,6 +242,124 @@
         <p class="trace-result accept">Final set {q1, q3} contains accepting states, so 0<sup>6</sup> is <strong>accepted</strong>. Both branches accept here, because 6 is divisible by 2 and by 3.</p>
         <p>Compared with the turnstile DFA, the nondeterminism buys a much simpler design: instead of building one machine that tracks the length modulo 6 and decides, the NFA runs the two small counters in parallel and lets either one say yes.</p>
       </div>
+
+      <div class="project">
+        <div class="project-kicker">activity · DFA, NFA &amp; regular languages</div>
+        <h3>A real-world activity: the two-button door lock</h3>
+        <p>A small lock has just two buttons, <span class="mono">A</span> and <span class="mono">B</span>. It opens as soon as the user presses <span class="mono">A</span> and then <span class="mono">B</span> straight after it, no matter what was pressed before. Once open, it stays open until it is reset.</p>
+        <p>The alphabet has only two symbols: <span class="mono">Σ = {A, B}</span>.</p>
+
+        <h4>1 · The language</h4>
+        <div class="formal">
+          L = { w ∈ Σ* | w contains the substring AB }<br>
+          Regular expression: (A|B)* AB (A|B)*<br>
+          Right-linear grammar:<br>
+          &nbsp; S → AS | BS | AX<br>
+          &nbsp; X → BY<br>
+          &nbsp; Y → AY | BY | ε
+        </div>
+
+        <h4>2 · The NFA: guess where AB starts</h4>
+        <p>State n0 keeps listening. On every <span class="mono">A</span> it also guesses that this is the start of the code and moves a second copy to n1. If a <span class="mono">B</span> follows, that copy reaches n2 and accepts. Wrong guesses just disappear.</p>
+        <div class="diagram-box nfa-box">
+          <svg viewBox="0 0 360 120" id="lock-nfa" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NFA that accepts words containing AB">
+            <defs>
+              <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"></path>
+              </marker>
+            </defs>
+            <path class="nfa-edge" d="M 8,80 L 34,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 84,80 L 156,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 204,80 L 271,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 48,59 C 38,20 82,20 72,59" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 288,59 C 278,20 322,20 312,59" marker-end="url(#arrow3)" />
+            <text class="edge-label" x="120" y="72">A</text>
+            <text class="edge-label" x="238" y="72">B</text>
+            <text class="edge-label" x="60" y="16">A,B</text>
+            <text class="edge-label" x="300" y="16">A,B</text>
+            <circle class="lock-circle" data-n="0" cx="60" cy="80" r="24"></circle>
+            <text class="lock-label" data-nl="0" x="60" y="84">n0</text>
+            <circle class="lock-circle" data-n="1" cx="180" cy="80" r="24"></circle>
+            <text class="lock-label" data-nl="1" x="180" y="84">n1</text>
+            <circle class="lock-circle accept-ring" cx="300" cy="80" r="29"></circle>
+            <circle class="lock-circle" data-n="2" cx="300" cy="80" r="24"></circle>
+            <text class="lock-label" data-nl="2" x="300" y="84">n2</text>
+          </svg>
+          <div class="diagram-caption">
+            <span>NFA: Q = {n0, n1, n2}, F = {n2}</span>
+            <span>Σ = {A, B}</span>
+          </div>
+        </div>
+        <table class="transition">
+          <tr><th>State</th><th>A</th><th>B</th></tr>
+          <tr><td>→ n0</td><td>{n0, n1}</td><td>{n0}</td></tr>
+          <tr><td>n1</td><td>∅</td><td>{n2}</td></tr>
+          <tr><td>* n2</td><td>{n2}</td><td>{n2}</td></tr>
+        </table>
+
+        <h4>3 · The DFA: exactly one move per button</h4>
+        <p>The subset construction turns the NFA into a DFA whose states are sets of NFA states. Every set containing n2 accepts forever, so they merge into one state:</p>
+        <ul>
+          <li><strong>S0</strong> = {n0}: nothing useful typed yet.</li>
+          <li><strong>S1</strong> = {n0, n1}: the last button was A.</li>
+          <li><strong>S2</strong> = {n0, n2, …}: AB was typed, so the lock is open.</li>
+        </ul>
+        <div class="diagram-box nfa-box">
+          <svg viewBox="0 0 360 120" id="lock-dfa" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DFA that accepts words containing AB">
+            <path class="nfa-edge" d="M 8,80 L 34,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 84,80 L 156,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 204,80 L 271,80" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 48,59 C 38,20 82,20 72,59" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 168,59 C 158,20 202,20 192,59" marker-end="url(#arrow3)" />
+            <path class="nfa-edge" d="M 288,59 C 278,20 322,20 312,59" marker-end="url(#arrow3)" />
+            <text class="edge-label" x="120" y="72">A</text>
+            <text class="edge-label" x="238" y="72">B</text>
+            <text class="edge-label" x="60" y="16">B</text>
+            <text class="edge-label" x="180" y="16">A</text>
+            <text class="edge-label" x="300" y="16">A,B</text>
+            <circle class="lock-circle" data-d="0" cx="60" cy="80" r="24"></circle>
+            <text class="lock-label" data-dl="0" x="60" y="84">S0</text>
+            <circle class="lock-circle" data-d="1" cx="180" cy="80" r="24"></circle>
+            <text class="lock-label" data-dl="1" x="180" y="84">S1</text>
+            <circle class="lock-circle accept-ring" cx="300" cy="80" r="29"></circle>
+            <circle class="lock-circle" data-d="2" cx="300" cy="80" r="24"></circle>
+            <text class="lock-label" data-dl="2" x="300" y="84">S2</text>
+          </svg>
+          <div class="diagram-caption">
+            <span>DFA: Q = {S0, S1, S2}, F = {S2}</span>
+            <span>Σ = {A, B}</span>
+          </div>
+        </div>
+        <table class="transition">
+          <tr><th>State</th><th>A</th><th>B</th></tr>
+          <tr><td>→ S0</td><td>S1</td><td>S0</td></tr>
+          <tr><td>S1</td><td>S1</td><td>S2</td></tr>
+          <tr><td>* S2</td><td>S2</td><td>S2</td></tr>
+        </table>
+
+        <h4>4 · Try it: press the buttons</h4>
+        <p>Both machines read the same input. The NFA can be in several states at once; the DFA is always in exactly one. Try <span class="mono">B A A B</span> (opens), then reset and try <span class="mono">B B A</span> (stays locked).</p>
+        <div class="diagram-box lock-demo">
+          <div class="diagram-controls lock-keys">
+            <button type="button" class="lock-btn" data-key="A">A</button>
+            <button type="button" class="lock-btn" data-key="B">B</button>
+            <button type="button" class="lock-btn lock-reset" id="lock-reset">Reset</button>
+          </div>
+          <div class="lock-readout">
+            <div><span class="label">Input so far</span><strong id="lock-input" class="mono">ε (empty)</strong></div>
+            <div><span class="label">NFA active states</span><strong id="lock-nfa-set" class="mono">{n0}</strong></div>
+            <div><span class="label">DFA state</span><strong id="lock-dfa-state" class="mono">S0</strong></div>
+            <div><span class="label">Lock</span><strong id="lock-verdict" aria-live="polite">Locked</strong></div>
+          </div>
+          <div class="trace-scroll">
+            <table class="transition trace">
+              <thead><tr><th>Step</th><th>Button</th><th>NFA set</th><th>DFA state</th></tr></thead>
+              <tbody id="lock-trace"><tr><td>0</td><td>start</td><td>{n0}</td><td>S0</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <p>The NFA accepts when n2 is active, and the DFA accepts when it reaches S2, so the two always agree. NFAs, DFAs, and regular expressions all describe the same regular language; the NFA is easiest to design and the DFA is easiest to run.</p>
+      </div>
     </div>
   </section>
 
